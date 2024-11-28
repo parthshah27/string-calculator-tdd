@@ -1,0 +1,20 @@
+{
+    "name": "string-calculator-tdd",
+    "version": "1.0.0",
+    "description": "A String Calculator implementation using TDD principles in Node.js",
+    "main": "StringCalculator.js",
+    "scripts": {
+        "test": "jest"
+    },
+    "keywords": [
+        "string",
+        "calculator",
+        "tdd",
+        "nodejs"
+    ],
+    "author": "Parth Shah",
+    "license": "MIT",
+    "devDependencies": {
+        "jest": "^29.7.0"
+    }
+}
