@@ -40,8 +40,16 @@ describe("StringCalculator", () => {
         expect(calculator.add("2,1001")).toBe(2);
         expect(calculator.add("1000,1001")).toBe(1000);
     });
-    
-    
+
+    test("should handle delimiters of any length", () => {
+        expect(calculator.add("//[***]\n1***2***3")).toBe(6);
+        expect(calculator.add("//[abc]\n1abc2abc3")).toBe(6);
+    });
+
+    test("should handle multiple custom delimiters of any length", () => {
+        expect(calculator.add("//[*][%]\n1*2%3")).toBe(6);
+        expect(calculator.add("//[***][%%%]\n1***2%%%3")).toBe(6);
+    });
     
     
 });
