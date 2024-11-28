@@ -1,45 +1,59 @@
 class StringCalculator {
+    /**
+     * Main method to add numbers from a string.
+     * @param {string} numbers - Input string containing numbers separated by delimiters.
+     * @returns {number} - The sum of the numbers.
+     */
     add(numbers) {
         if (!numbers) return 0; // Return 0 if input is empty
 
-        let delimiterRegex = /,|\n/; // Default delimiters: comma or newline
+        const { delimiters, numberString } = this.extractDelimiters(numbers);
 
-        // Check for custom delimiters
-        if (numbers.startsWith("//")) {
-            const customDelimiterMatch = numbers.match(/^\/\/(\[.*?\]|.)\n(.*)$/s);
-            if (customDelimiterMatch) {
-                const rawDelimiters = customDelimiterMatch[1];
-                numbers = customDelimiterMatch[2];
+        // Create a regex pattern for all delimiters
+        const delimiterRegex = new RegExp(`[${delimiters.join("")}\n]`);
 
-                // Handle single or multiple custom delimiters
-                if (rawDelimiters.startsWith("[")) {
-                    const delimiters = rawDelimiters
-                        .match(/\[(.+?)\]/g)
-                        .map((d) => d.slice(1, -1)); // Extract delimiters from brackets
-                    delimiterRegex = new RegExp(`${delimiters.map(this.escapeRegex).join("|")}`);
-                } else {
-                    delimiterRegex = new RegExp(this.escapeRegex(rawDelimiters));
-                }
-            }
-        }
+        // Split the number string using the regex and parse to integers
+        const numberList = numberString
+            .split(delimiterRegex)
+            .map((num) => parseInt(num, 10))
+            .filter((num) => !isNaN(num) && num <= 1000); // Ignore numbers greater than 1000
 
-        const numberList = numbers
-                            .split(delimiterRegex)
-                            .map((num) => parseInt(num, 10))
-                            .filter((num) => !isNaN(num) && num <= 1000); // Ignore NaN and numbers > 1000
-
+        // Find all negative numbers
         const negatives = numberList.filter((num) => num < 0);
         if (negatives.length > 0) {
             throw new Error(`Negative numbers not allowed: ${negatives.join(", ")}`);
         }
 
-        return numberList.reduce((sum, num) => sum + num, 0); // Return the sum
+        // Sum all the valid numbers and return the result
+        return numberList.reduce((sum, num) => sum + num, 0);
     }
 
-    // Helper to escape special characters in regex
-    escapeRegex(string) {
-        return string.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+    /**
+     * Extracts the custom delimiters and the number string from the input.
+     * Handles single/multiple delimiters of any length.
+     * @param {string} input - Input string, which may include custom delimiter definitions.
+     * @returns {Object} - An object containing an array of delimiters and the actual number string.
+     */
+    extractDelimiters(input) {
+        if (input.startsWith("//")) {
+            const delimiterMatch = input.match(/^\/\/(\[.*\]|.)\n(.*)$/s);
+            if (delimiterMatch) {
+                const rawDelimiters = delimiterMatch[1];
+                const numberString = delimiterMatch[2];
+
+                // Handle multiple delimiters defined with square brackets
+                const delimiters = rawDelimiters.startsWith("[")
+                    ? rawDelimiters.match(/\[(.+?)\]/g).map((d) => d.slice(1, -1)) // Extract values inside []
+                    : [rawDelimiters]; // Single character delimiter
+
+                return { delimiters, numberString };
+            }
+        }
+
+        // Default case: delimiter is a comma
+        return { delimiters: [","], numberString: input };
     }
 }
 
+// Export the class for use in other files
 module.exports = StringCalculator;
