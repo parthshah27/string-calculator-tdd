@@ -12,9 +12,13 @@ class StringCalculator {
         
         // Split by default comma delimiter
         const delimiterRegex = /[,\n]/; // Regex for comma or new line
-        
+
         // Split by default comma delimiter
-        const numberList = numbers.split(delimiterRegex).map((num) => parseInt(num, 10));
+        const numberList = numbers
+                            .split(delimiterRegex)
+                            .map((num) => parseInt(num, 10))
+                            .filter((num) => !isNaN(num) && num <= 1000);
+
         const negatives = numberList.filter((num) => num < 0);
         if (negatives.length > 0) {
             throw new Error(`Negative numbers not allowed: ${negatives.join(", ")}`);
