@@ -5,7 +5,7 @@ class StringCalculator {
         // Split by default comma delimiter
         const numberList = numbers.split(",").map((num) => parseInt(num, 10));
     
-        return numberList[0] || 0; // Return the single number or 0 if input is empty
+        return numberList.reduce((sum, num) => sum + num, 0); // Sum all numbers
     }
 }
 
