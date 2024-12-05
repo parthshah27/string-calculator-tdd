@@ -62,4 +62,8 @@ describe("StringCalculator", () => {
         expect(calculator.add("//[***][%%%]\n1***2%%%3")).toBe(6); // Delimiters are *** and %%%
     });
     
+    test("should return the product of numbers when * is the delimeter", () =>{
+        expect(calculator.add("//[*]\n4*5*2")).toBe(40)
+    })
+
 });
